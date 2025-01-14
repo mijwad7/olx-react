@@ -4,6 +4,7 @@ import Header from "../Header/Header";
 import { FirebaseContext, AuthContext } from "../../store/FirebaseContext";
 import { addDoc, collection } from "firebase/firestore";
 import { db } from "../../firebase/config";
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
   const { user } = useContext(AuthContext);
@@ -11,6 +12,7 @@ const Create = () => {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +35,7 @@ const Create = () => {
       setName("");
       setCategory("");
       setPrice("");
+      navigate("/");
     } catch (error) {
       console.error("Error creating product:", error);
       alert("Failed to create product. Please try again.");
