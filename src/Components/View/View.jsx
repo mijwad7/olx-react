@@ -41,6 +41,12 @@ function View() {
 
   return (
     <div className="viewParentDiv">
+      <div className="imageShowDiv">
+        <img
+          src={postDetails.imageURL}
+          alt=""
+        />
+      </div>
       <div className="rightSection">
         <div className="productDetails">
           <p>&#x20B9; {postDetails.price} </p>

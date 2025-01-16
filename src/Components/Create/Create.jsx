@@ -3,16 +3,26 @@ import "./Create.css";
 import Header from "../Header/Header";
 import { FirebaseContext, AuthContext } from "../../store/FirebaseContext";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../../firebase/config";
+import { db, storage } from "../../firebase/config";
 import { useNavigate } from "react-router-dom";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"; // Firebase Storage
 
 const Create = () => {
   const { user } = useContext(AuthContext);
-  const { firebaseApp } = useContext(FirebaseContext); // Accessing initialized Firebase
+  const { firebaseApp } = useContext(FirebaseContext);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
+  const [image, setImage] = useState(null); // For storing the image
+  const [loading, setLoading] = useState(false); // To handle loading state
   const navigate = useNavigate();
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,24 +31,53 @@ const Create = () => {
       return;
     }
 
-    try {
-      const productRef = collection(db, "products");
-      await addDoc(productRef, {
-        name,
-        category,
-        price: Number(price),
-        createdBy: user.uid, // Store user ID for reference
-        createdAt: new Date(),
-      });
+    if (!image) {
+      alert("Please upload an image for the product.");
+      return;
+    }
 
-      alert("Product created successfully!");
-      setName("");
-      setCategory("");
-      setPrice("");
-      navigate("/");
+    try {
+      setLoading(true); // Start loading
+
+      // Upload image to Firebase Storage
+      const imageRef = ref(storage, `products/${image.name}`);
+      const uploadTask = uploadBytesResumable(imageRef, image);
+
+      uploadTask.on(
+        "state_changed",
+        null,
+        (error) => {
+          console.error("Image upload failed:", error);
+          alert("Image upload failed. Please try again.");
+        },
+        async () => {
+          // Get download URL after successful upload
+          const imageURL = await getDownloadURL(uploadTask.snapshot.ref);
+
+          // Add product to Firestore
+          const productRef = collection(db, "products");
+          await addDoc(productRef, {
+            name,
+            category,
+            price: Number(price),
+            createdBy: user.uid,
+            createdAt: new Date(),
+            imageURL, // Save image URL in Firestore
+          });
+
+          alert("Product created successfully!");
+          setName("");
+          setCategory("");
+          setPrice("");
+          setImage(null); // Reset image input
+          navigate("/");
+        }
+      );
     } catch (error) {
       console.error("Error creating product:", error);
       alert("Failed to create product. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -53,7 +92,7 @@ const Create = () => {
             className="input"
             type="text"
             id="name"
-            name="Name"
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
@@ -77,15 +116,32 @@ const Create = () => {
             className="input"
             type="number"
             id="price"
-            name="Price"
+            name="price"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             required
           />
           <br />
-          <button className="button" type="submit">
-            Create Product
-          </button>
+          <label htmlFor="image">Image</label>
+          <br />
+          <input
+            className="input"
+            type="file"
+            id="image"
+            name="image"
+            onChange={handleImageChange}
+            required
+          />
+          <br />
+          {loading ? (
+            <button className="button" type="button" disabled>
+              Uploading...
+            </button>
+          ) : (
+            <button className="button" type="submit">
+              Create Product
+            </button>
+          )}
         </form>
         <br />
       </div>

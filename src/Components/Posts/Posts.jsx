@@ -15,7 +15,7 @@ function Posts() {
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const productsCollection = collection(db, "products"); // Reference to 'products' collection
+      const productsCollection = collection(db, "products");
 
       try {
         const snapshot = await getDocs(productsCollection); // Fetch the documents
@@ -37,7 +37,7 @@ function Posts() {
     <div className="postParentDiv">
       <div className="moreView">
         <div className="heading">
-          <span>Quick Menu</span>
+          <span>All Products</span>
           <span>View more</span>
         </div>
         <div className="cards">
@@ -53,6 +53,13 @@ function Posts() {
               <div className="favorite">
                 <Heart />
               </div>
+              <div className="image">
+                {product.imageURL ? (
+                  <img src={product.imageURL} alt={product.name} />
+                ) : (
+                  <img src="default-image-path.jpg" alt="default" />
+                )}
+              </div>
               <div className="content">
                 <p className="rate">&#x20B9; {product.price}</p>
                 <span className="kilometer">{product.category}</span>
@@ -63,29 +70,6 @@ function Posts() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-      <div className="recommendations">
-        <div className="heading">
-          <span>Fresh recommendations</span>
-        </div>
-        <div className="cards">
-          <div className="card">
-            <div className="favorite">
-              <Heart></Heart>
-            </div>
-            <div className="image">
-              <img src="../../../Images/R15V3.jpg" alt="" />
-            </div>
-            <div className="content">
-              <p className="rate">&#x20B9; 250000</p>
-              <span className="kilometer">Two Wheeler</span>
-              <p className="name"> YAMAHA R15V3</p>
-            </div>
-            <div className="date">
-              <span>10/5/2021</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
