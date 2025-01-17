@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import { FirebaseContext } from "../../store/FirebaseContext";
 import { PostContext } from "../../store/PostContext";
 import Heart from "../../assets/Heart";
 import "./Post.css";
@@ -8,7 +7,6 @@ import { db } from "../../firebase/config";
 import { useNavigate } from "react-router-dom";
 
 function Posts() {
-  const { firebase } = useContext(FirebaseContext);
   const [products, setProducts] = useState([]);
   const { setPostDetails } = useContext(PostContext);
   const navigate = useNavigate();

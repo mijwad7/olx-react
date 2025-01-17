@@ -1,10 +1,7 @@
 import React from 'react';
-
 import Logo from '../../olx-logo.png';
 import './Signup.css';
-import {useState, useEffect, useContext} from 'react';
-import { FirebaseContext } from '../../store/FirebaseContext';
-import {useNavigate} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import { auth, db } from '../../firebase/config';
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { collection, addDoc } from "firebase/firestore";
@@ -14,7 +11,6 @@ export default function Signup() {
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [phone, setPhone] = React.useState('');
-  const {firebase} = useContext(FirebaseContext);
   const navigate = useNavigate();
 
   function handleSubmit(e) {
@@ -57,7 +53,6 @@ export default function Signup() {
             id="fname"
             onChange={(e) => setUsername(e.target.value)}
             name="name"
-            defaultValue="John"
           />
           <br />
           <label htmlFor="email">Email</label>
@@ -68,7 +63,6 @@ export default function Signup() {
             type="email"
             id="email"
             name="email"
-            defaultValue="John"
           />
           <br />
           <label htmlFor="phone">Phone</label>
@@ -78,7 +72,6 @@ export default function Signup() {
             type="number"
             id="phone"
             name="phone"
-            defaultValue="Doe"
             onChange={(e) => setPhone(e.target.value)}
           />
           <br />
@@ -90,13 +83,12 @@ export default function Signup() {
             id="password"
             name="password"
             onChange={(e) => setPassword(e.target.value)}
-            defaultValue="Doe"
           />
           <br />
           <br />
           <button>Signup</button>
         </form>
-        <a>Login</a>
+        <Link to="/login">Login</Link>
       </div>
     </div>
   );

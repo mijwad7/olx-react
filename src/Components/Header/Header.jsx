@@ -8,13 +8,11 @@ import SellButton from "../../assets/SellButton";
 import SellButtonPlus from "../../assets/SellButtonPlus";
 import { useNavigate, Link } from "react-router-dom";
 import { auth } from "../../firebase/config";
-
-import { AuthContext, FirebaseContext } from "../../store/FirebaseContext";
+import { AuthContext } from "../../store/FirebaseContext";
 import { signOut } from "firebase/auth";
 
 function Header() {
   const { user } = React.useContext(AuthContext);
-  const { firebase } = React.useContext(FirebaseContext);
   const navigate = useNavigate();
 
   return (

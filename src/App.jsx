@@ -6,14 +6,13 @@ import Login from "./Pages/Login";
 import Create from "./Pages/Create";
 import ViewPost from "./Pages/ViewPost";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { AuthContext, FirebaseContext } from "./store/FirebaseContext";
+import { AuthContext} from "./store/FirebaseContext";
 import Post from "./store/PostContext";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./firebase/config";
 
 function App() {
   const { setUser } = useContext(AuthContext);
-  const {firebase} = useContext(FirebaseContext);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);

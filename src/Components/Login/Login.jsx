@@ -1,17 +1,15 @@
 import React from 'react';
 import { useState, useContext } from 'react';
-import { FirebaseContext } from '../../store/FirebaseContext';
 import Logo from '../../olx-logo.png';
 import { auth, db } from '../../firebase/config';
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 import './Login.css';
 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const {firebase} = useContext(FirebaseContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -20,11 +18,9 @@ function Login() {
     try {
       // Attempt to sign in with email and password
       const result = await signInWithEmailAndPassword(auth, email, password);
-      console.log(result);
       alert("Login Successful");
       navigate("/");
     } catch (error) {
-      console.error("Login failed", error);
       alert(error.message);
     }
   };
@@ -59,7 +55,7 @@ function Login() {
           <br />
           <button>Login</button>
         </form>
-        <a>Signup</a>
+        <Link to="/signup">Signup</Link>
       </div>
     </div>
   );

@@ -10,13 +10,13 @@ function View() {
 
   useEffect(() => {
     const fetchUserDetails = async () => {
-      const nestedUserId = postDetails.createdBy;
-      console.log("Nested User ID:", nestedUserId);
+      const userId = postDetails.createdBy;
+      console.log("Nested User ID:", userId);
 
-      if (nestedUserId) {
+      if (userId) {
         try {
           const usersRef = collection(db, "users");
-          const q = query(usersRef, where("id", "==", nestedUserId));
+          const q = query(usersRef, where("id", "==", userId));
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
@@ -26,7 +26,7 @@ function View() {
               setUserDetails(doc.data());
             });
           } else {
-            console.log("No user found with nested ID:", nestedUserId);
+            console.log("No user found with nested ID:", userId);
           }
         } catch (error) {
           console.error("Error fetching user details:", error);
@@ -52,7 +52,7 @@ function View() {
           <p>&#x20B9; {postDetails.price} </p>
           <span>{postDetails.name}</span>
           <p>{postDetails.category}</p>
-          <span>Tue May 04 2021</span>
+          <span>Jan 15 2025</span>
         </div>
         <div className="contactDetails">
           <p>Seller details</p>

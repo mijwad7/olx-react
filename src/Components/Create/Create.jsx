@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useContext } from "react";
 import "./Create.css";
 import Header from "../Header/Header";
-import { FirebaseContext, AuthContext } from "../../store/FirebaseContext";
+import { AuthContext } from "../../store/FirebaseContext";
 import { addDoc, collection } from "firebase/firestore";
 import { db, storage } from "../../firebase/config";
 import { useNavigate } from "react-router-dom";
@@ -9,12 +9,11 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage"; //
 
 const Create = () => {
   const { user } = useContext(AuthContext);
-  const { firebaseApp } = useContext(FirebaseContext);
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
-  const [image, setImage] = useState(null); // For storing the image
-  const [loading, setLoading] = useState(false); // To handle loading state
+  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleImageChange = (e) => {
@@ -37,9 +36,8 @@ const Create = () => {
     }
 
     try {
-      setLoading(true); // Start loading
+      setLoading(true);
 
-      // Upload image to Firebase Storage
       const imageRef = ref(storage, `products/${image.name}`);
       const uploadTask = uploadBytesResumable(imageRef, image);
 
@@ -51,10 +49,8 @@ const Create = () => {
           alert("Image upload failed. Please try again.");
         },
         async () => {
-          // Get download URL after successful upload
           const imageURL = await getDownloadURL(uploadTask.snapshot.ref);
 
-          // Add product to Firestore
           const productRef = collection(db, "products");
           await addDoc(productRef, {
             name,
@@ -62,14 +58,14 @@ const Create = () => {
             price: Number(price),
             createdBy: user.uid,
             createdAt: new Date(),
-            imageURL, // Save image URL in Firestore
+            imageURL,
           });
 
           alert("Product created successfully!");
           setName("");
           setCategory("");
           setPrice("");
-          setImage(null); // Reset image input
+          setImage(null);
           navigate("/");
         }
       );
@@ -77,7 +73,7 @@ const Create = () => {
       console.error("Error creating product:", error);
       alert("Failed to create product. Please try again.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
